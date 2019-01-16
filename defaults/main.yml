@@ -16,9 +16,9 @@ graphite_user: graphite
 graphite_group: graphite
 graphite_open_files_limit: 4096
 
-
-# The default is "60s:1d" (1 day data), this will keep data for 5 years.
-# If you log a lot of data, you may need to restrict this to a shorter time.
+# The syntax for retention is "frequency:history" ex. "10s:14d"
 graphite_storage_schemas_default_retentions: "10s:14d,1m:90d,30m:1y,1h:5y"
 graphite_storage_schemas_carbon_retentions: 60:90d
 graphite_storage_schemas: []
+  # - {name: test1, pattern: "test1*", retentions: "10s:14d,1m:90d"}
+  # - {name: test2, pattern: "test2*", retentions: "60s:1d,5m:30d,1h:3y"}
