@@ -7,6 +7,13 @@
     recurse: yes
     state: directory
 
+- name: Ensure Graphite started and enabled
+  systemd:
+    name: graphite-carbon
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
 - name: Copy storage schemas
   template:
     src: storage-schemas.conf.j2
@@ -26,10 +33,3 @@
   template:
     src: graphite-carbon.service.j2
     dest: /etc/systemd/system/graphite-carbon.service
-
-- name: Ensure Graphite started and enabled
-  systemd:
-    name: graphite-carbon
-    state: started
-    enabled: yes
-    daemon_reload: yes
