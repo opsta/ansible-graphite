@@ -1,0 +1,5 @@
+---
+- name: Restart Graphite
+  systemd:
+    name: graphite-carbon
+    state: restarted

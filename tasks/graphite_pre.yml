@@ -1,0 +1,10 @@
+---
+  - name: Add Graphite group
+    group:
+      name: "{{ graphite_group }}"
+
+  - name: Add Graphite user
+    user:
+      name: "{{ graphite_user }}"
+      group: "{{ graphite_group }}"
+      shell: /bin/bash

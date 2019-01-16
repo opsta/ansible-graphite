@@ -1,0 +1,7 @@
+---
+graphite_apt_packages:
+  - python-dev
+  - python-pip
+  - libcairo2-dev
+  - libffi-dev
+  - build-essential

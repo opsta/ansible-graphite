@@ -1,0 +1,30 @@
+---
+- name: Set list of path to look for local Graphite configuration directory
+  set_fact:
+    graphite_search_config_paths: "{{ graphite_search_config_paths }} + [ '{{ graphite_search_config_path }}' ]"
+  with_items: "{{ group_names }}"
+
+- name: Check if Graphite configuration directory exists
+  stat:
+    path: "{{ item }}"
+  register: graphite_config_check
+  become: false
+  delegate_to: 127.0.0.1
+  with_first_found:
+    - files: "{{ graphite_search_config_paths }}"
+      skip: true
+
+- name: Set Graphite configuration directory
+  set_fact:
+    graphite_host_config_path: "{{ graphite_config_check.results[0].stat.path }}"
+  when:
+    - graphite_config_check.results[0] is defined
+    - graphite_config_check.results[0].stat is defined
+    - graphite_config_check.results[0].stat.isdir
+
+- name: Check if Graphite template configuration file is exists
+  stat:
+    path: "{{ graphite_host_config_file_path }}"
+  become: false
+  delegate_to: 127.0.0.1
+  register: graphite_config_check

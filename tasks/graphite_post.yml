@@ -1,0 +1,35 @@
+---
+- name: Set permission for Graphite
+  file:
+    path: "{{ graphite_install_path }}"
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    recurse: yes
+    state: directory
+
+- name: Copy storage schemas
+  template:
+    src: storage-schemas.conf.j2
+    dest: "{{ graphite_install_path }}/conf/storage-schemas.conf"
+
+- name: Copy Graphite configuration file
+  template:
+    src: "{{ graphite_host_config_file_path }}"
+    dest: "{{ graphite_config_file_path }}"
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    mode: 0644
+  when: graphite_config_check.stat.exists
+  notify: Restart Graphite
+
+- name: Create systemd unit file
+  template:
+    src: graphite-carbon.service.j2
+    dest: /etc/systemd/system/graphite-carbon.service
+
+- name: Ensure Graphite started and enabled
+  systemd:
+    name: graphite-carbon
+    state: started
+    enabled: yes
+    daemon_reload: yes

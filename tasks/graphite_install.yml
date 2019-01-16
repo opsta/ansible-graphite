@@ -1,0 +1,15 @@
+---
+- name: Install pip 
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ graphite_apt_packages }}"
+
+- name: Install Graphite with pip
+  pip:
+    name: "{{ item }}"
+    extra_args: "--no-binary=:all:"
+  environment:
+    PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
+  with_items: "{{ graphite_pip_packages }}"
