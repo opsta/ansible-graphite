@@ -1,10 +1,15 @@
 ---
-  - name: Add Graphite group
-    group:
-      name: "{{ graphite_group }}"
+- name: Add Graphite group
+  group:
+    name: "{{ graphite_group }}"
 
-  - name: Add Graphite user
-    user:
-      name: "{{ graphite_user }}"
-      group: "{{ graphite_group }}"
-      shell: /bin/bash
+- name: Add Graphite user
+  user:
+    name: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    shell: /bin/bash
+
+- name: Download pip install script from pypa
+  get_url: 
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp

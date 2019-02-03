@@ -4,6 +4,7 @@ graphite_install_path: "/opt/graphite"
 graphite_pip_packages:
   - "carbon=={{ graphite_version }}"
   - "whisper=={{ graphite_version }}"
+  - "graphite-web=={{ graphite_version }}"
 
 graphite_search_config_path: "{{ playbook_dir }}/files/groups/{{ item }}/graphite"
 graphite_search_config_paths: []
