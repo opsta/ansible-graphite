@@ -1,12 +1,4 @@
 ---
-- name: Set permission for Graphite
-  file:
-    path: "{{ graphite_install_path }}"
-    owner: "{{ graphite_user }}"
-    group: "{{ graphite_group }}"
-    recurse: yes
-    state: directory
-
 - name: Copy Graphite configuration file
   template:
     src: "{{ graphite_host_config_file_path }}"
@@ -21,7 +13,30 @@
   template:
     src: storage-schemas.conf.j2
     dest: "{{ graphite_install_path }}/conf/storage-schemas.conf"
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
   notify: Restart Graphite
+
+- name: Copy WSGI config
+  copy: 
+    src:  "{{ graphite_install_path }}/conf/graphite.wsgi.example"
+    dest: "{{ graphite_install_path }}/conf/wsgi.py"
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    remote_src: true
+
+- name: Run Graphite webapp migration
+  command: "django-admin.py migrate --settings=graphite.settings --run-syncdb"
+  environment:
+    PYTHONPATH: "{{ graphite_install_path }}/webapp"
+
+- name: Set permission for Graphite
+  file:
+    path: "{{ graphite_install_path }}"
+    owner: "{{ graphite_user }}"
+    group: "{{ graphite_group }}"
+    recurse: yes
+    state: directory
 
 - name: Create systemd unit file
   template:
@@ -34,3 +49,8 @@
     state: started
     enabled: yes
     daemon_reload: yes
+
+- name: Delete pip install script
+  file: 
+    path: /tmp/get-pip.py
+    state: absent

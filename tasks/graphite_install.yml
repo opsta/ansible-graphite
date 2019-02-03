@@ -1,10 +1,13 @@
 ---
-- name: Install pip 
+- name: Install apt dependencies 
   apt:
     name: "{{ item }}"
     state: present
     update_cache: yes
   with_items: "{{ graphite_apt_packages }}"
+
+- name: Install pip
+  command: python /tmp/get-pip.py
 
 - name: Install Graphite with pip
   pip:
@@ -13,3 +16,4 @@
   environment:
     PYTHONPATH: "{{ graphite_install_path }}/lib:{{ graphite_install_path }}/webapp"
   with_items: "{{ graphite_pip_packages }}"
+  notify: Restart Graphite
